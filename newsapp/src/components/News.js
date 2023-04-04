@@ -27,7 +27,7 @@ export class News extends Component {
     }
     async componentDidMount() {
         console.log("mount");
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=5e23fbfcc13d494888e9461a087b92cb&page=1&pageSize=${this.props.pageSize}`;
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59160cbda516489d98c7c714ea79828c&page=1&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
         let parseData = await data.json();
@@ -39,7 +39,7 @@ export class News extends Component {
     }
     handlePrevClick = async () => {
         console.log('prev')
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=5e23fbfcc13d494888e9461a087b92cb&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59160cbda516489d98c7c714ea79828c&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
         let parseData = await data.json();
@@ -53,7 +53,7 @@ export class News extends Component {
     handleNextClick = async () => {
         if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize))) {
 
-            let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=5e23fbfcc13d494888e9461a087b92cb&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+            let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59160cbda516489d98c7c714ea79828c&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
             this.setState({ loading: true })
             let data = await fetch(url);
             let parseData = await data.json();
@@ -74,7 +74,14 @@ export class News extends Component {
                 <div className="row justify-content-center">
                     {!this.state.loading && this.state.articles.map((element) => {
                         return <div className="col-md-4" key={element.url}>
-                            <Newsitem title={element.title ? element.title.slice(0, 45) : ""} description={element.description ? element.description.slice(0, 88) : ""} imageUrl={element.urlToImage ? element.urlToImage : "https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"} newsUrl={element.url ? element.url : ""} />
+                            <Newsitem title={element.title ? element.title.slice(0, 45) : ""} 
+                                description={element.description ? element.description.slice(0, 88) : ""} 
+                                imageUrl={element.urlToImage ? element.urlToImage : "https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"} 
+                                newsUrl={element.url ? element.url : ""} 
+                                author ={element.author?element.author:"Unknown"} 
+                                date={element.publishedAt ? element.publishedAt : ""}
+                                source = {element.source.name}
+                                />
                         </div>
                     })}
 
