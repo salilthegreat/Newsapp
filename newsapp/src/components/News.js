@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Newsitem from './Newsitem'
 import Spinner from './Spinner';
 import PropTypes from 'prop-types'
-import  InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroll-component";
 export class News extends Component {
     static defaultProps = {
         country: 'in',
@@ -30,6 +30,7 @@ export class News extends Component {
     }
 
     async componentDidMount() {
+        this.props.setProgress(10);
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=5e23fbfcc13d494888e9461a087b92cb&page=1&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
@@ -39,8 +40,10 @@ export class News extends Component {
             totalResults: parseData.totalResults,
             loading: false
         })
+        this.props.setProgress(100);
     }
-    fetchMoreData = async ()=>{
+    fetchMoreData = async () => {
+        this.props.setProgress(10);
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=5e23fbfcc13d494888e9461a087b92cb&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
@@ -49,21 +52,22 @@ export class News extends Component {
             articles: this.state.articles.concat(parseData.articles),
             totalResults: parseData.totalResults,
             loading: false,
-            page:this.state.page +1
+            page: this.state.page + 1
         })
+        this.props.setProgress(100);
     }
     render() {
         return (
-            
+
             <div className='container my-3'>
                 <h2 className='text-center'>NewsMonkey - Top Headlines from {this.capitalizeFirstLetter(this.props.category)}</h2>
                 {this.state.loading && <Spinner />}
-                                    <InfiniteScroll 
-                dataLength={this.state.articles.length} 
-                next={this.fetchMoreData} 
-                hasMore={this.state.articles.length !== this.state.totalResults}
-                loader={<Spinner/>}>
-                    
+                <InfiniteScroll
+                    dataLength={this.state.articles.length}
+                    next={this.fetchMoreData}
+                    hasMore={this.state.articles.length !== this.state.totalResults}
+                    loader={<Spinner />}>
+
                     <div className="row justify-content-center">
                         {this.state.articles.map((element) => {
                             return <div className="col-md-4" key={element.url}>
@@ -79,7 +83,7 @@ export class News extends Component {
                         })}
 
                     </div>
-                    </InfiniteScroll>
+                </InfiniteScroll>
             </div>
         )
     }
