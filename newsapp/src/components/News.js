@@ -14,19 +14,22 @@ export class News extends Component {
         pageSize:PropTypes.number.isRequired,
         category:PropTypes.string.isRequired
     }
-    constructor() {
-        super();
-        console.log("Hello! I am a constructor from News Components");
+     capitalizeFirstLetter= (letter)=>{
+        return letter.charAt(0).toUpperCase() + letter.slice(1)
+     }
+
+    constructor(props) {
+        super(props);
         this.state = {
             articles: [],
             loading: false,
             page: 1,
             totalResults: 0
-
         }
+        document.title = `${this.capitalizeFirstLetter(this.props.category)} - News Monkey`
     }
+
     async componentDidMount() {
-        console.log("mount");
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59160cbda516489d98c7c714ea79828c&page=1&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
@@ -38,7 +41,6 @@ export class News extends Component {
         })
     }
     handlePrevClick = async () => {
-        console.log('prev')
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=59160cbda516489d98c7c714ea79828c&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
@@ -49,6 +51,7 @@ export class News extends Component {
             totalResults: parseData.totalResults,
             loading: false
         })
+
     }
     handleNextClick = async () => {
         if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize))) {
@@ -66,10 +69,9 @@ export class News extends Component {
         }
     }
     render() {
-        console.log("render")
         return (
             <div className='container my-3'>
-                <h2 className='text-center'>NewsMonkey - Top Headlines</h2>
+                <h2 className='text-center'>NewsMonkey - Top Headlines from {this.capitalizeFirstLetter(this.props.category)}</h2>
                 {this.state.loading && <Spinner />}
                 <div className="row justify-content-center">
                     {!this.state.loading && this.state.articles.map((element) => {
